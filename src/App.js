@@ -144,6 +144,7 @@ class App extends Component {
                   placeholder="Beats per minute"
                   size="large"
                   value={this.state.beatsPerMinute}
+                  type="number"
                 />
                 <CopyToClipboard onCopy={this.onCopyBpm.bind(this)} text={this.state.beatsPerMinute}>
                   <Label as="a" attached="top right" color="teal" className="App__Segment-Label">
@@ -168,6 +169,7 @@ class App extends Component {
                   placeholder="Milliseconds per beat"
                   size="large"
                   value={this.state.millisecondsPerBeat}
+                  type="number"
                 />
                 <CopyToClipboard onCopy={this.onCopyMspb.bind(this)} text={this.state.millisecondsPerBeat}>
                   <Label as="a" attached="top right" color="purple" className="App__Segment-Label">
