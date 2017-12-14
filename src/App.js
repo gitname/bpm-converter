@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Container, Form, Header, Icon, Input, Segment} from 'semantic-ui-react';
+import {Container, Grid, Header, Icon, Input, Label, Segment} from 'semantic-ui-react';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 import './App.css';
@@ -16,8 +16,9 @@ class App extends Component {
 
     this.state = {
       beatsPerMinute: initialBeatsPerMinute,
-      copied: false,
-      millisecondsPerBeat: App.calculateMillisecondsPerBeat(initialBeatsPerMinute)
+      millisecondsPerBeat: App.calculateMillisecondsPerBeat(initialBeatsPerMinute),
+      bpmCopied: false,
+      mspbCopied: false
     };
   }
 
@@ -36,7 +37,8 @@ class App extends Component {
   onBpmChange(event, data) {
     this.setState({
       beatsPerMinute: data.value,
-      copied: false,
+      bpmCopied: false,
+      mspbCopied: false,
       millisecondsPerBeat: App.calculateMillisecondsPerBeat(data.value)
     });
   }
@@ -44,16 +46,25 @@ class App extends Component {
   onMspbChange(event, data) {
     this.setState({
       beatsPerMinute: App.calculateBeatsPerMinute(data.value),
-      copied: false,
-      millisecondsPerBeat: data.value
+      millisecondsPerBeat: data.value,
+      bpmCopied: false,
+      mspbCopied: false
     });
   }
 
-  copyHandler() {
+  onCopyBpm(text, result) {
     this.setState({
-      copied: true
+      bpmCopied: true,
+      mspbCopied: false
     });
-  };
+  }
+
+  onCopyMspb(text, result) {
+    this.setState({
+      bpmCopied: false,
+      mspbCopied: true
+    });
+  }
 
   render() {
     return (
@@ -69,43 +80,61 @@ class App extends Component {
           </Header>
 
           <p>
-            Enter the <strong>beats per minute</strong> or the <strong>milliseconds per beat</strong>.
-            The other field will update in real-time to show an equivalent value, which you can
-            <strong>copy</strong> to your clipboard.
+            Enter the tempo (in <strong>beats per minute</strong>) or the beat interval (in <strong>milliseconds per
+            beat</strong>). The other field will update in real-time to show an equivalent value, which you
+            can <strong>copy</strong> to your clipboard.
           </p>
 
-          <Form>
-            <Form.Group widths="equal">
-              <Form.Field
-                action={
-                  <CopyToClipboard onCopy={this.copyHandler.bind(this)} text={this.state.beatsPerMinute}>
-                    <Button color="teal" icon labelPosition="right"><Icon name="copy"/> Copy</Button>
-                  </CopyToClipboard>
-                }
-                control={Input}
-                label="Beats per minute"
-                onChange={this.onBpmChange.bind(this)}
-                placeholder="Beats per minute"
-                size="huge"
-                value={this.state.beatsPerMinute}
-              />
-              <Form.Field
-                action={
-                  <CopyToClipboard onCopy={this.copyHandler.bind(this)} text={this.state.millisecondsPerBeat}>
-                    <Button color="purple" icon labelPosition="right"><Icon name="copy"/> Copy</Button>
-                  </CopyToClipboard>
-                }
-                control={Input}
-                label="Milliseconds per beat"
-                onChange={this.onMspbChange.bind(this)}
-                placeholder="Milliseconds per beat"
-                size="huge"
-                value={this.state.millisecondsPerBeat}
-              />
-            </Form.Group>
-          </Form>
-
-          {this.state.copied ? <span style={{color: "red"}}>Copied.</span> : null}
+          <Grid columns={2} stackable>
+            <Grid.Column>
+              <Segment color="teal" padded>
+                <Header>
+                  Tempo
+                  <Header.Subheader>
+                    Beats per minute
+                  </Header.Subheader>
+                </Header>
+                <Input
+                  fluid
+                  icon={this.state.bpmCopied ? <Icon name="check" color="teal"/> : null}
+                  onChange={this.onBpmChange.bind(this)}
+                  placeholder="Beats per minute"
+                  size="large"
+                  value={this.state.beatsPerMinute}
+                />
+                <CopyToClipboard onCopy={this.onCopyBpm.bind(this)} text={this.state.beatsPerMinute}>
+                  <Label as="a" attached="top right" color="teal" className="App__Segment-Label">
+                    <Icon name="copy"/>
+                    Copy
+                  </Label>
+                </CopyToClipboard>
+              </Segment>
+            </Grid.Column>
+            <Grid.Column>
+              <Segment color="purple" padded>
+                <Header>
+                  Beat Interval
+                  <Header.Subheader>
+                    Milliseconds per beat
+                  </Header.Subheader>
+                </Header>
+                <Input
+                  fluid
+                  icon={this.state.mspbCopied ? <Icon name="check" color="purple"/> : null}
+                  onChange={this.onBpmChange.bind(this)}
+                  placeholder="Milliseconds per beat"
+                  size="large"
+                  value={this.state.millisecondsPerBeat}
+                />
+                <CopyToClipboard onCopy={this.onCopyMspb.bind(this)} text={this.state.millisecondsPerBeat}>
+                  <Label as="a" attached="top right" color="purple" className="App__Segment-Label">
+                    <Icon name="copy"/>
+                    Copy
+                  </Label>
+                </CopyToClipboard>
+              </Segment>
+            </Grid.Column>
+          </Grid>
 
         </Container>
       </Segment>
