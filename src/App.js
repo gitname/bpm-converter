@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Container, Form, Header, Icon, Input, Segment} from 'semantic-ui-react';
+import {Button, Container, Form, Header, Icon, Input, Segment} from 'semantic-ui-react';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 import './App.css';
 
@@ -15,6 +16,7 @@ class App extends Component {
 
     this.state = {
       beatsPerMinute: initialBeatsPerMinute,
+      copied: false,
       millisecondsPerBeat: App.calculateMillisecondsPerBeat(initialBeatsPerMinute)
     };
   }
@@ -34,6 +36,7 @@ class App extends Component {
   onBpmChange(event, data) {
     this.setState({
       beatsPerMinute: data.value,
+      copied: false,
       millisecondsPerBeat: App.calculateMillisecondsPerBeat(data.value)
     });
   }
@@ -41,9 +44,16 @@ class App extends Component {
   onMspbChange(event, data) {
     this.setState({
       beatsPerMinute: App.calculateBeatsPerMinute(data.value),
+      copied: false,
       millisecondsPerBeat: data.value
     });
   }
+
+  copyHandler() {
+    this.setState({
+      copied: true
+    });
+  };
 
   render() {
     return (
@@ -61,13 +71,17 @@ class App extends Component {
           <p>
             Enter the <strong>beats per minute</strong> or the <strong>milliseconds per beat</strong>.
             The other field will update in real-time to show an equivalent value, which you can
-            then <strong>copy</strong> to your clipboard.
+            <strong>copy</strong> to your clipboard.
           </p>
 
           <Form>
             <Form.Group widths="equal">
               <Form.Field
-                action={{color: "teal", labelPosition: "right", icon: "copy", content: "Copy"}}
+                action={
+                  <CopyToClipboard onCopy={this.copyHandler.bind(this)} text={this.state.beatsPerMinute}>
+                    <Button color="teal" icon labelPosition="right"><Icon name="copy"/> Copy</Button>
+                  </CopyToClipboard>
+                }
                 control={Input}
                 label="Beats per minute"
                 onChange={this.onBpmChange.bind(this)}
@@ -76,7 +90,11 @@ class App extends Component {
                 value={this.state.beatsPerMinute}
               />
               <Form.Field
-                action={{color: "purple", labelPosition: "right", icon: "copy", content: "Copy"}}
+                action={
+                  <CopyToClipboard onCopy={this.copyHandler.bind(this)} text={this.state.millisecondsPerBeat}>
+                    <Button color="purple" icon labelPosition="right"><Icon name="copy"/> Copy</Button>
+                  </CopyToClipboard>
+                }
                 control={Input}
                 label="Milliseconds per beat"
                 onChange={this.onMspbChange.bind(this)}
@@ -86,6 +104,8 @@ class App extends Component {
               />
             </Form.Group>
           </Form>
+
+          {this.state.copied ? <span style={{color: "red"}}>Copied.</span> : null}
 
         </Container>
       </Segment>
