@@ -12,7 +12,11 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    const initialBeatsPerMinute = 72;
+    // A regular expression representing a floating point number in one of several formats.
+    this.floatRegExp = /(?:^\d+$)|(?:^\.\d+$)|(?:^\d+\.$)|(?:^\d+\.\d+$)/;
+
+    // The number to which the BPM input value will be initialized.
+    const initialBeatsPerMinute = 120;
 
     this.state = {
       beatsPerMinute: initialBeatsPerMinute,
@@ -32,21 +36,47 @@ class App extends Component {
     return MILLISECONDS_PER_MINUTE / millisecondsPerBeat;
   }
 
-  // TODO: Validate input data (e.g. accept positive integers only)
-
   onBpmChange(event, data) {
+    const numBeatsStr = data.value;
+
+    if (this.floatRegExp.test(numBeatsStr)) {
+      this.setState({
+        beatsPerMinute: numBeatsStr,
+        millisecondsPerBeat: App.calculateMillisecondsPerBeat(Number.parseFloat(numBeatsStr))
+      });
+    } else if (numBeatsStr === "" || numBeatsStr === ".") {
+      this.setState({
+        beatsPerMinute: numBeatsStr,
+        millisecondsPerBeat: ""
+      });
+    } else {
+      // TODO: Display an error message or instructions.
+    }
+
     this.setState({
-      beatsPerMinute: data.value,
       bpmCopied: false,
-      mspbCopied: false,
-      millisecondsPerBeat: App.calculateMillisecondsPerBeat(data.value)
+      mspbCopied: false
     });
   }
 
   onMspbChange(event, data) {
+    const millisecondsStr = data.value;
+
+    if (this.floatRegExp.test(millisecondsStr)) {
+      this.setState({
+        beatsPerMinute: App.calculateBeatsPerMinute(Number.parseFloat(millisecondsStr)),
+        millisecondsPerBeat: millisecondsStr
+      });
+    } else if (millisecondsStr === "" || millisecondsStr === ".") {
+      this.setState({
+        beatsPerMinute: "",
+        millisecondsPerBeat: millisecondsStr
+      });
+    } else {
+      // TODO: Display an error message or instructions.
+    }
+
     this.setState({
-      beatsPerMinute: App.calculateBeatsPerMinute(data.value),
-      millisecondsPerBeat: data.value,
       bpmCopied: false,
       mspbCopied: false
     });
@@ -126,7 +156,7 @@ class App extends Component {
                 <Input
                   fluid
                   icon={this.state.mspbCopied ? <Icon name="check" color="purple"/> : null}
-                  onChange={this.onBpmChange.bind(this)}
+                  onChange={this.onMspbChange.bind(this)}
                   placeholder="Milliseconds per beat"
                   size="large"
                   value={this.state.millisecondsPerBeat}
