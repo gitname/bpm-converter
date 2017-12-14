@@ -53,17 +53,23 @@ class App extends Component {
   }
 
   onCopyBpm(text, result) {
-    this.setState({
-      bpmCopied: true,
-      mspbCopied: false
-    });
+    if (result === true) {
+      console.info(`Copied ${text} to clipboard.`);
+      this.setState({
+        bpmCopied: true,
+        mspbCopied: false
+      });
+    }
   }
 
   onCopyMspb(text, result) {
-    this.setState({
-      bpmCopied: false,
-      mspbCopied: true
-    });
+    if (result === true) {
+      console.info(`Copied ${text} to clipboard.`);
+      this.setState({
+        bpmCopied: false,
+        mspbCopied: true
+      });
+    }
   }
 
   render() {
@@ -80,9 +86,8 @@ class App extends Component {
           </Header>
 
           <p>
-            Enter the tempo (in <strong>beats per minute</strong>) or the beat interval (in <strong>milliseconds per
-            beat</strong>). The other field will update in real-time to show an equivalent value, which you
-            can <strong>copy</strong> to your clipboard.
+            Enter either a tempo or a beat interval length. The other field will automatically show its corresponding
+            value, which you can copy to your clipboard.
           </p>
 
           <Grid columns={2} stackable>
@@ -113,7 +118,7 @@ class App extends Component {
             <Grid.Column>
               <Segment color="purple" padded>
                 <Header>
-                  Beat Interval
+                  Beat Interval Length
                   <Header.Subheader>
                     Milliseconds per beat
                   </Header.Subheader>
