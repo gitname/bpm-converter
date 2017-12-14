@@ -26,14 +26,22 @@ class App extends Component {
     };
   }
 
-  // TODO: Consider rounding the result to the nearest integer, and displaying a label that says whether we rounded it.
-
-  static calculateMillisecondsPerBeat(beatsPerMinute) {
-    return MILLISECONDS_PER_MINUTE / beatsPerMinute;
+  static calculateMillisecondsPerBeat(beatsPerMinute, numDecimalPlaces) {
+    let millisecondsPerBeat = MILLISECONDS_PER_MINUTE / beatsPerMinute;
+    if (numDecimalPlaces != null) {
+      // Round the Number (producing a String), then convert the String back into a Number (eliminating trailing 0s).
+      millisecondsPerBeat = parseFloat(millisecondsPerBeat.toFixed(numDecimalPlaces));
+    }
+    return millisecondsPerBeat;
   }
 
-  static calculateBeatsPerMinute(millisecondsPerBeat) {
-    return MILLISECONDS_PER_MINUTE / millisecondsPerBeat;
+  static calculateBeatsPerMinute(millisecondsPerBeat, numDecimalPlaces) {
+    let beatsPerMinute = MILLISECONDS_PER_MINUTE / millisecondsPerBeat;
+    if (numDecimalPlaces != null) {
+      // Round the Number (producing a String), then convert the String back into a Number (eliminating trailing 0s).
+      beatsPerMinute = parseFloat(beatsPerMinute.toFixed(numDecimalPlaces));
+    }
+    return beatsPerMinute;
   }
 
   onBpmChange(event, data) {
@@ -42,7 +50,7 @@ class App extends Component {
     if (this.floatRegExp.test(numBeatsStr)) {
       this.setState({
         beatsPerMinute: numBeatsStr,
-        millisecondsPerBeat: App.calculateMillisecondsPerBeat(Number.parseFloat(numBeatsStr))
+        millisecondsPerBeat: App.calculateMillisecondsPerBeat(Number.parseFloat(numBeatsStr), 2)
       });
     } else if (numBeatsStr === "" || numBeatsStr === ".") {
       this.setState({
@@ -64,7 +72,7 @@ class App extends Component {
 
     if (this.floatRegExp.test(millisecondsStr)) {
       this.setState({
-        beatsPerMinute: App.calculateBeatsPerMinute(Number.parseFloat(millisecondsStr)),
+        beatsPerMinute: App.calculateBeatsPerMinute(Number.parseFloat(millisecondsStr), 2),
         millisecondsPerBeat: millisecondsStr
       });
     } else if (millisecondsStr === "" || millisecondsStr === ".") {
