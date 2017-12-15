@@ -136,7 +136,7 @@ class App extends Component {
    * @param text
    * @param result
    */
-  onCopyBpm(text, result) {
+  onCopyTempo(text, result) {
     if (result === true) {
       console.info(`Copied ${text} to clipboard.`);
       this.setState({
@@ -199,7 +199,7 @@ class App extends Component {
                   value={this.state.tempo}
                   type="text"
                 />
-                <CopyToClipboard onCopy={this.onCopyBpm.bind(this)} text={this.state.tempo}>
+                <CopyToClipboard onCopy={this.onCopyTempo.bind(this)} text={this.state.tempo}>
                   <Label as="a" attached="top right" color="teal" className="App__Segment-Label">
                     <Icon name="copy"/>
                     Copy
