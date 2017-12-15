@@ -197,7 +197,7 @@ class App extends Component {
                   placeholder="Enter a tempo"
                   size="large"
                   value={this.state.tempo}
-                  type="number"
+                  type="text"
                 />
                 <CopyToClipboard onCopy={this.onCopyBpm.bind(this)} text={this.state.tempo}>
                   <Label as="a" attached="top right" color="teal" className="App__Segment-Label">
@@ -223,7 +223,7 @@ class App extends Component {
                   placeholder="Enter a beat duration"
                   size="large"
                   value={this.state.beatDuration}
-                  type="number"
+                  type="text"
                 />
                 <CopyToClipboard onCopy={this.onCopyMspb.bind(this)} text={this.state.beatDuration}>
                   <Label as="a" attached="top right" color="purple" className="App__Segment-Label">
