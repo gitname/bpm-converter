@@ -15,97 +15,150 @@ class App extends Component {
     // A regular expression representing a floating point number in one of several formats.
     this.floatRegExp = /(?:^\d+$)|(?:^\.\d+$)|(?:^\d+\.$)|(?:^\d+\.\d+$)/;
 
-    // The number to which the BPM input value will be initialized.
-    const initialBeatsPerMinute = 120;
+    // The number to which the tempo will be initialized.
+    const initialTempo = 120;
 
     this.state = {
-      beatsPerMinute: initialBeatsPerMinute,
-      millisecondsPerBeat: App.calculateMillisecondsPerBeat(initialBeatsPerMinute),
-      bpmCopied: false,
-      mspbCopied: false
+
+      // Floating-point number representing the tempo (in beats per minute).
+      tempo: initialTempo,
+
+      // Floating-point number representing the duration of a beat (in milliseconds).
+      beatDuration: App.calculateBeatDuration(initialTempo),
+
+      // Boolean representing whether the tempo has been copied to the clipboard.
+      tempoCopied: false,
+
+      // Boolean representing whether the beat duration has been copied to the clipboard.
+      beatDurationCopied: false
     };
   }
 
-  static calculateMillisecondsPerBeat(beatsPerMinute, numDecimalPlaces) {
-    let millisecondsPerBeat = MILLISECONDS_PER_MINUTE / beatsPerMinute;
-    if (numDecimalPlaces != null) {
-      // Round the Number (producing a String), then convert the String back into a Number (eliminating trailing 0s).
-      millisecondsPerBeat = parseFloat(millisecondsPerBeat.toFixed(numDecimalPlaces));
+  /**
+   * Calculates the duration of one beat, based on the tempo passed in.
+   * If a precision is passed in, rounds the result to that number of decimal places, then eliminates trailing 0s.
+   *
+   * @param tempo - the tempo (in beats per minute)
+   * @param precision - the number of decimal places to which you want the result rounded
+   * @return {number} - the duration of one beat (in milliseconds)
+   */
+  static calculateBeatDuration(tempo, precision) {
+    // Calculate the beat duration (in milliseconds).
+    let beatDuration = MILLISECONDS_PER_MINUTE / tempo;
+
+    // If a precision is defined, round the result to that number of decimal places (eliminating trailing 0s).
+    if (precision != null) {
+      beatDuration = parseFloat(beatDuration.toFixed(precision));
     }
-    return millisecondsPerBeat;
+    return beatDuration;
   }
 
-  static calculateBeatsPerMinute(millisecondsPerBeat, numDecimalPlaces) {
-    let beatsPerMinute = MILLISECONDS_PER_MINUTE / millisecondsPerBeat;
-    if (numDecimalPlaces != null) {
-      // Round the Number (producing a String), then convert the String back into a Number (eliminating trailing 0s).
-      beatsPerMinute = parseFloat(beatsPerMinute.toFixed(numDecimalPlaces));
+  /**
+   * Calculates the tempo, based on the beat duration passed in.
+   * If a precision is passed in, rounds the results to that number of decimal places, then eliminates trailing 0s.
+   *
+   * @param beatDuration - the duration of one beat (in milliseconds)
+   * @param precision - the number of decimal places to which you want the result rounded
+   * @return {number} - the tempo (in beats per minute)
+   */
+  static calculateTempo(beatDuration, precision) {
+    // Calculate the tempo (in beats per minute).
+    let tempo = MILLISECONDS_PER_MINUTE / beatDuration;
+
+    // If a precision is defined, round the result to that number of decimal places (eliminating trailing 0s).
+    if (precision != null) {
+      tempo = parseFloat(tempo.toFixed(precision));
     }
-    return beatsPerMinute;
+    return tempo;
   }
 
-  onBpmChange(event, data) {
-    const numBeatsStr = data.value;
+  /**
+   * Updates the component's state with a new tempo, if that new tempo is valid.
+   *
+   * @param event
+   * @param data
+   */
+  onTempoChange(event, data) {
+    const submittedTempo = data.value;
+    console.log(submittedTempo);
 
-    if (this.floatRegExp.test(numBeatsStr)) {
+    if (this.floatRegExp.test(submittedTempo)) {
       this.setState({
-        beatsPerMinute: numBeatsStr,
-        millisecondsPerBeat: App.calculateMillisecondsPerBeat(Number.parseFloat(numBeatsStr), 2)
+        tempo: submittedTempo,
+        beatDuration: App.calculateBeatDuration(Number.parseFloat(submittedTempo), 2)
       });
-    } else if (numBeatsStr === "" || numBeatsStr === ".") {
+    } else if (submittedTempo === "" || submittedTempo === ".") {
       this.setState({
-        beatsPerMinute: numBeatsStr,
-        millisecondsPerBeat: ""
+        tempo: submittedTempo,
+        beatDuration: ""
       });
     } else {
       // TODO: Display an error message or instructions.
     }
 
     this.setState({
-      bpmCopied: false,
-      mspbCopied: false
+      tempoCopied: false,
+      beatDurationCopied: false
     });
   }
 
-  onMspbChange(event, data) {
-    const millisecondsStr = data.value;
+  /**
+   * Updates the component's state with a new beat duration, if that new beat duration is valid.
+   *
+   * @param event
+   * @param data
+   */
+  onBeatDurationChange(event, data) {
+    const submittedBeatDuration = data.value;
 
-    if (this.floatRegExp.test(millisecondsStr)) {
+    if (this.floatRegExp.test(submittedBeatDuration)) {
       this.setState({
-        beatsPerMinute: App.calculateBeatsPerMinute(Number.parseFloat(millisecondsStr), 2),
-        millisecondsPerBeat: millisecondsStr
+        tempo: App.calculateTempo(Number.parseFloat(submittedBeatDuration), 2),
+        beatDuration: submittedBeatDuration
       });
-    } else if (millisecondsStr === "" || millisecondsStr === ".") {
+    } else if (submittedBeatDuration === "" || submittedBeatDuration === ".") {
       this.setState({
-        beatsPerMinute: "",
-        millisecondsPerBeat: millisecondsStr
+        tempo: "",
+        beatDuration: submittedBeatDuration
       });
     } else {
       // TODO: Display an error message or instructions.
     }
 
     this.setState({
-      bpmCopied: false,
-      mspbCopied: false
+      tempoCopied: false,
+      beatDurationCopied: false
     });
   }
 
+  /**
+   * Sets the "tempo copied" flag in the component's state, if the tempo was copied.
+   *
+   * @param text
+   * @param result
+   */
   onCopyBpm(text, result) {
     if (result === true) {
       console.info(`Copied ${text} to clipboard.`);
       this.setState({
-        bpmCopied: true,
-        mspbCopied: false
+        tempoCopied: true,
+        beatDurationCopied: false
       });
     }
   }
 
+  /**
+   * Sets the "beat duration copied" flag in the component's state, if the tempo was copied.
+   *
+   * @param text
+   * @param result
+   */
   onCopyMspb(text, result) {
     if (result === true) {
       console.info(`Copied ${text} to clipboard.`);
       this.setState({
-        bpmCopied: false,
-        mspbCopied: true
+        tempoCopied: false,
+        beatDurationCopied: true
       });
     }
   }
@@ -124,8 +177,8 @@ class App extends Component {
           </Header>
 
           <p>
-            Enter either a tempo or a beat interval length. The other field will automatically show its corresponding
-            value, which you can copy to your clipboard.
+            Enter a tempo or a beat duration. The other field will automatically show its corresponding value,
+            which you can copy to your clipboard.
           </p>
 
           <Grid columns={2} stackable>
@@ -134,19 +187,19 @@ class App extends Component {
                 <Header>
                   Tempo
                   <Header.Subheader>
-                    Beats per minute
+                    Beats per minute (BPM)
                   </Header.Subheader>
                 </Header>
                 <Input
                   fluid
-                  icon={this.state.bpmCopied ? <Icon name="check" color="teal"/> : null}
-                  onChange={this.onBpmChange.bind(this)}
-                  placeholder="Beats per minute"
+                  icon={this.state.tempoCopied ? <Icon name="check" color="teal"/> : null}
+                  onChange={this.onTempoChange.bind(this)}
+                  placeholder="Enter a tempo"
                   size="large"
-                  value={this.state.beatsPerMinute}
+                  value={this.state.tempo}
                   type="number"
                 />
-                <CopyToClipboard onCopy={this.onCopyBpm.bind(this)} text={this.state.beatsPerMinute}>
+                <CopyToClipboard onCopy={this.onCopyBpm.bind(this)} text={this.state.tempo}>
                   <Label as="a" attached="top right" color="teal" className="App__Segment-Label">
                     <Icon name="copy"/>
                     Copy
@@ -154,24 +207,25 @@ class App extends Component {
                 </CopyToClipboard>
               </Segment>
             </Grid.Column>
+
             <Grid.Column>
               <Segment color="purple" padded>
                 <Header>
-                  Beat Interval Length
+                  Beat Duration
                   <Header.Subheader>
-                    Milliseconds per beat
+                    Milliseconds (ms)
                   </Header.Subheader>
                 </Header>
                 <Input
                   fluid
-                  icon={this.state.mspbCopied ? <Icon name="check" color="purple"/> : null}
-                  onChange={this.onMspbChange.bind(this)}
-                  placeholder="Milliseconds per beat"
+                  icon={this.state.beatDurationCopied ? <Icon name="check" color="purple"/> : null}
+                  onChange={this.onBeatDurationChange.bind(this)}
+                  placeholder="Enter a beat duration"
                   size="large"
-                  value={this.state.millisecondsPerBeat}
+                  value={this.state.beatDuration}
                   type="number"
                 />
-                <CopyToClipboard onCopy={this.onCopyMspb.bind(this)} text={this.state.millisecondsPerBeat}>
+                <CopyToClipboard onCopy={this.onCopyMspb.bind(this)} text={this.state.beatDuration}>
                   <Label as="a" attached="top right" color="purple" className="App__Segment-Label">
                     <Icon name="copy"/>
                     Copy
