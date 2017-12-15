@@ -1,5 +1,7 @@
 # BPM Converter
 
+![Screenshot of BPM Converter on Mobile Device](bpm-converter-screenshot-mobile.png)
+
 ## Backstory
 
 My friend, who operates a recording studio, posted a message on Facebook saying he wanted to convert a tempo into a beat duration.
