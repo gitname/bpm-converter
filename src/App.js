@@ -147,7 +147,7 @@ class App extends Component {
   }
 
   /**
-   * Sets the "beat duration copied" flag in the component's state, if the tempo was copied.
+   * Sets the "beat duration copied" flag in the component's state, if the beat duration was copied.
    *
    * @param text
    * @param result
