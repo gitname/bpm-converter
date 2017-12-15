@@ -168,17 +168,18 @@ class App extends Component {
       <Segment basic>
         <Container>
 
-          <Header as="h1" textAlign="center">
-            <Icon name="music" color="teal"/>
+          <Header as="h1">
             <Header.Content>
               BPM Converter
+              <Header.Subheader>
+                A Beats Per Minute Converter
+              </Header.Subheader>
             </Header.Content>
-            <Icon name="clock" color="purple"/>
           </Header>
 
           <p>
-            Enter a tempo or a beat duration. The other field will automatically show its corresponding value,
-            which you can copy to your clipboard.
+            Enter a tempo or a beat duration.
+            The other field will show an equivalent value, which you can copy to your clipboard.
           </p>
 
           <Grid columns={2} stackable>
