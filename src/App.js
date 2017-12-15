@@ -152,7 +152,7 @@ class App extends Component {
    * @param text
    * @param result
    */
-  onCopyMspb(text, result) {
+  onCopyBeatDuration(text, result) {
     if (result === true) {
       console.info(`Copied ${text} to clipboard.`);
       this.setState({
@@ -225,7 +225,7 @@ class App extends Component {
                   value={this.state.beatDuration}
                   type="text"
                 />
-                <CopyToClipboard onCopy={this.onCopyMspb.bind(this)} text={this.state.beatDuration}>
+                <CopyToClipboard onCopy={this.onCopyBeatDuration.bind(this)} text={this.state.beatDuration}>
                   <Label as="a" attached="top right" color="purple" className="App__Segment-Label">
                     <Icon name="copy"/>
                     Copy
