@@ -80,7 +80,6 @@ class App extends Component {
    */
   onTempoChange(event, data) {
     const submittedTempo = data.value;
-    console.log(submittedTempo);
 
     if (this.floatRegExp.test(submittedTempo)) {
       this.setState({
