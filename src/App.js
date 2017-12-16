@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Container, Grid, Header, Icon, Input, Label, Segment} from 'semantic-ui-react';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {Container, Grid, Header, Segment} from 'semantic-ui-react';
+
+import InputSegment from './InputSegment';
 
 import './App.css';
 
@@ -183,55 +184,29 @@ class App extends Component {
 
           <Grid columns={2} stackable>
             <Grid.Column>
-              <Segment color="teal" padded>
-                <Header>
-                  Tempo
-                  <Header.Subheader>
-                    Beats per minute (BPM)
-                  </Header.Subheader>
-                </Header>
-                <Input
-                  fluid
-                  icon={this.state.tempoCopied ? <Icon name="check" color="teal"/> : null}
-                  onChange={this.onTempoChange.bind(this)}
-                  placeholder="Enter a tempo"
-                  size="large"
-                  value={this.state.tempo}
-                  type="text"
-                />
-                <CopyToClipboard onCopy={this.onCopyTempo.bind(this)} text={this.state.tempo}>
-                  <Label as="a" attached="top right" color="teal" className="App__Segment-Label">
-                    <Icon name="copy"/>
-                    Copy
-                  </Label>
-                </CopyToClipboard>
-              </Segment>
+              <InputSegment
+                header={"Tempo"}
+                subHeader={"Beats per minute (BPM)"}
+                placeholder={"Enter a tempo"}
+                accentColor={"teal"}
+                changeHandler={this.onTempoChange.bind(this)}
+                onCopy={this.onCopyTempo.bind(this)}
+                value={this.state.tempo}
+                valueCopied={this.state.tempoCopied}
+              />
             </Grid.Column>
 
             <Grid.Column>
-              <Segment color="purple" padded>
-                <Header>
-                  Beat Duration
-                  <Header.Subheader>
-                    Milliseconds (ms)
-                  </Header.Subheader>
-                </Header>
-                <Input
-                  fluid
-                  icon={this.state.beatDurationCopied ? <Icon name="check" color="purple"/> : null}
-                  onChange={this.onBeatDurationChange.bind(this)}
-                  placeholder="Enter a beat duration"
-                  size="large"
-                  value={this.state.beatDuration}
-                  type="text"
-                />
-                <CopyToClipboard onCopy={this.onCopyBeatDuration.bind(this)} text={this.state.beatDuration}>
-                  <Label as="a" attached="top right" color="purple" className="App__Segment-Label">
-                    <Icon name="copy"/>
-                    Copy
-                  </Label>
-                </CopyToClipboard>
-              </Segment>
+              <InputSegment
+                header={"Beat Duration"}
+                subHeader={"Milliseconds (ms)"}
+                placeholder={"Enter a beat duration"}
+                accentColor={"purple"}
+                changeHandler={this.onBeatDurationChange.bind(this)}
+                onCopy={this.onCopyBeatDuration.bind(this)}
+                value={this.state.beatDuration}
+                valueCopied={this.state.beatDurationCopied}
+              />
             </Grid.Column>
           </Grid>
 
