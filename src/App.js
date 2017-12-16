@@ -84,7 +84,7 @@ class App extends Component {
     if (this.floatRegExp.test(submittedTempo)) {
       this.setState({
         tempo: submittedTempo,
-        beatDuration: App.calculateBeatDuration(Number.parseFloat(submittedTempo), 2)
+        beatDuration: App.calculateBeatDuration(parseFloat(submittedTempo), 2)
       });
     } else if (submittedTempo === "" || submittedTempo === ".") {
       this.setState({
@@ -112,7 +112,7 @@ class App extends Component {
 
     if (this.floatRegExp.test(submittedBeatDuration)) {
       this.setState({
-        tempo: App.calculateTempo(Number.parseFloat(submittedBeatDuration), 2),
+        tempo: App.calculateTempo(parseFloat(submittedBeatDuration), 2),
         beatDuration: submittedBeatDuration
       });
     } else if (submittedBeatDuration === "" || submittedBeatDuration === ".") {
