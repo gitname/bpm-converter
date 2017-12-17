@@ -1,9 +1,7 @@
 import React from 'react';
 import {Container, Grid, Header, Segment} from 'semantic-ui-react';
 
-import CopyableFieldContainer from './containers/CopyableFieldContainer';
-
-import './App.css';
+import CopyableFieldContainer from '../containers/CopyableFieldContainer';
 
 const App = (props) => {
   return (
