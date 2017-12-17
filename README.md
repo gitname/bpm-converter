@@ -21,6 +21,7 @@ This web app offers the following features:
 I used the following technologies while developing this web app:
 
 * React (via [`create-react-app`](https://www.npmjs.com/package/create-react-app))
+* Redux
 * Semantic UI
 * [`react-copy-to-clipboard`](https://www.npmjs.com/package/react-copy-to-clipboard)
 * Jest
